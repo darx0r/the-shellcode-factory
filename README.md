@@ -4,7 +4,7 @@ For now supports x86.
 
 ## HOWTO
 1. edit shellcode.asm file
-2. make asm=shellcode.asm
+2. run make asm=shellcode.asm
 3. WOW !
 
 ## Example
@@ -15,13 +15,11 @@ section .text
 global _start
 
 _start:
-
     xor ebx, ebx
     xor eax, eax
     inc eax
     int 0x80
 ```
-
 saved as examples/shellcode.asm.
 
 make asm=examples/shellcode.asm
