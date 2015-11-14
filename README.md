@@ -4,8 +4,8 @@ For now supports x86.
 
 ## HOWTO
 1. edit shellcode.asm file
-2. run make asm=shellcode.asm
-3. WOW !
+2. execute "make asm=shellcode.asm"
+3. Wow !
 
 ## Example
 a quick example of exit(0) shellcode:
