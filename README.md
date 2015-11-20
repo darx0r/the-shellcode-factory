@@ -1,5 +1,5 @@
 # The Shellcode Factory
-minimal environment for shellcode development.
+minimal linux environment for shellcode development.
 For now supports x86.
 
 ## HOWTO
