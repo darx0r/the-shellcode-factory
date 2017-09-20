@@ -24,33 +24,17 @@ saved as examples/shellcode.asm.
 
 make asm=examples/shellcode.asm
 ```
-::: x86 Shellcode Factory :::
+::: x86(-64) Shellcode Factory :::
 
-
-::: Your piece of art :::
-
-examples/shellcode.out:     file format elf32-i386
-
-
-Disassembly of section .text:
-
-08048060 <_start>:
- 8048060:   31 db                   xor    ebx,ebx
- 8048062:   31 c0                   xor    eax,eax
- 8048064:   40                      inc    eax
- 8048065:   cd 80                   int    0x80
-
-::: shellcode buffer generator :::
-
+::: Your shellcode ready to go :::
 \x31\xdb\x31\xc0\x40\xcd\x80
 
-::: done, look at examples/shellcode.bin :::
-::: length: 7
+::: Your shellcode size : 7 :::
 ```
 
-examples/shellcode.bin contains our precious shellcode :)
+examples/shellcode.asm.bin contains our precious shellcode :)
 
 ## Requirements
 * nasm
-* ld (gcc-multilib on x86_64)
-* objdump
+* xxd (usually bundled with your Linux distribution)
+* awk (usually bundled with your Linux distribution)
