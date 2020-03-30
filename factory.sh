@@ -8,19 +8,39 @@ fi
 asm=$1
 name=${asm%%.*}
 
-echo -e "\n::: x86 Shellcode Factory :::\n"
+# Why /bin/echo rather than just 'echo' ?
 
-nasm -felf32 $asm
-ld -melf_i386 -o $name.out $name.o
+# '/bin/echo' is the GNU echo binary, 'echo' usually refers to the shell
+# built-in function, and some popular shells don't handle the '-e' option
+# When GNU echo does.
+# By "popular shells" I mean default /bin/sh in Debian/Ubuntu based
+# distribution is now dash which echo built-in doesn't handle '-e'
 
-echo -e "\n::: Your piece of art :::"
-objdump -d -Mintel $name.out
+/bin/echo -e "::: x86(-64) Shellcode Factory :::"
 
-echo -e "\n::: shellcode buffer generator :::\n"
-objdump -d $name.out | grep '[0-9a-f]:' | grep -v 'file' | cut -f2 -d: | cut -f1-6 -d' ' | tr -s ' ' | tr '\t' ' ' | sed 's/ $//g' | sed 's/ /\\x/g' | paste -d '' -s | tee $name.bin 
-echo -ne `cat $name.bin` > $name.bin
+# Checks if arch is specified, if not 32 bits is the default
+header=$(head -n 1 $asm)
+if ! echo $header | grep -E 'BITS ?(32|64)';then
+	tmpfile="/tmp/tmp_asm"
+	echo "BITS 32" > $tmpfile
+	cat $asm >> $tmpfile
+ 	nasm -f bin $tmpfile -o $asm.bin
+ else
+ 	nasm -f bin $asm -o $asm.bin
+	fi
 
-echo -e "\n::: done, look at $name.bin :::"
-echo -n "::: length: "
-wc -c $name.bin | cut -f1 -d' ' 
+code=$(xxd -p $asm.bin | tr -d '\n')
+code_sz=${#code}
+i=0
 
+/bin/echo -e '\n::: Your shellcode ready to go :::'
+
+awk "BEGIN {binstr=\"$code\"
+for(i=1;i<$code_sz;i=i+2)
+{
+	printf \"\\\\x%s\", substr(binstr, i, 2)
+}}"
+
+# Setting code_sz to the real size rather than the hexdump size
+code_sz=$((code_sz/2))
+/bin/echo -e "\n\n::: Your shellcode size : $code_sz :::"
